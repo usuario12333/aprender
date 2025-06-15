@@ -78,15 +78,16 @@
 
         /* styles for on-page console */
         .console-output-area {
-            background-color: #222; /* Dark background */
-            color: #eee; /* Light text */
-            font-family: 'Courier New', Courier, monospace; /* Monospaced font */
+        background-color: #222;
+        color: #eee;
+        font-family: 'Courier New', Courier, monospace;
             padding: 10px;
-            margin: 1rem; /* Match margin of lessonContent */
+        margin: 1rem;
             border-radius: 5px;
-            height: 150px; /* Fixed height */
-            overflow-y: auto; /* Scrollable if content overflows */
             border: 1px solid #444;
+        display: flex; /* Make this a flex container */
+        flex-direction: column; /* Stack children vertically */
+        height: 200px; /* Or a suitable height, can be min/max too */
         }
 
         .console-header {
@@ -94,9 +95,47 @@
             margin-bottom: 5px;
             border-bottom: 1px solid #555;
             padding-bottom: 5px;
+        flex-shrink: 0; /* Prevent header from shrinking */
         }
 
-        #consoleMessages p {
+    #consoleMessages {
+        /* clear: both; no longer needed with flex parent */
+        /* height: 100px; Remove fixed height */
+        overflow-y: auto;
+        border-bottom: 1px solid #555;
+        margin-bottom: 5px;
+        flex-grow: 1; /* Allow messages area to take available vertical space */
+        min-height: 50px; /* Ensure it has some minimum height */
+    }
+
+    #consoleInputArea {
+        display: flex; /* This is already set, good */
+        align-items: center; /* Vertically align items in input area */
+        flex-shrink: 0; /* Prevent input area from shrinking */
+        padding-top: 5px; /* Add some space above input area */
+    }
+
+    #consoleInput {
+        flex-grow: 1;
+        background-color: #333;
+        color: #eee;
+        border: 1px solid #555;
+        padding: 8px; /* Increased padding for better touch target */
+        font-size: 1em; /* Ensure font size is not too small */
+        min-height: 20px; /* Ensure a minimum height for the input field itself */
+    }
+
+    #runConsoleInputButton {
+        margin-left: 5px;
+        padding: 8px 10px; /* Increased padding */
+        font-size: 1em;
+        background-color: #444; /* Added for consistency */
+        color: #eee; /* Added for consistency */
+        border: 1px solid #555; /* Added for consistency */
+        border-radius: 3px; /* Added for consistency */
+    }
+
+    #consoleMessages p { /* This rule might need to be placed after #consoleMessages if specificity is an issue, but likely fine */
             margin: 0 0 5px 0; /* Spacing between messages */
             white-space: pre-wrap; /* Preserve whitespace and wrap lines */
             word-break: break-all; /* Break long words to prevent overflow */
@@ -123,13 +162,12 @@
             <span>Console:</span>
             <button id="clearConsoleButton" style="float: right; font-size: 0.8em; padding: 2px 5px;">Clear</button>
         </div>
-        <div id="consoleMessages" style="clear: both; height: 100px; overflow-y: auto; border-bottom: 1px solid #555; margin-bottom: 5px;">
+        <div id="consoleMessages" style="/* clear: both; height: 100px; - Replaced by flex properties in CSS */">
             <!-- Messages will appear here -->
-            <!-- Adjusted height and added border/margin to separate from input area -->
         </div>
-        <div id="consoleInputArea" style="display: flex;">
-            <input type="text" id="consoleInput" style="flex-grow: 1; background-color: #333; color: #eee; border: 1px solid #555; padding: 3px;" placeholder="Digite o código aqui...">
-            <button id="runConsoleInputButton" style="margin-left: 5px; padding: 3px 7px;">Executar</button>
+        <div id="consoleInputArea" style="/* display: flex; - Replaced by CSS rule */">
+            <input type="text" id="consoleInput" style="/* flex-grow: 1; background-color: #333; color: #eee; border: 1px solid #555; padding: 3px; - Replaced by CSS */" placeholder="Digite o código aqui...">
+            <button id="runConsoleInputButton" style="/* margin-left: 5px; padding: 3px 7px; - Replaced by CSS */">Executar</button>
         </div>
     </div>
 
