@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda a Programar</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        nav {
+            background: #444;
+            color: #fff;
+            padding: 1rem;
+        }
+
+        nav h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        main#lessonContent {
+            padding: 1rem;
+            margin: 1rem;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background: #333;
+            color: #fff;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Aprenda HTML, CSS e JavaScript</h1>
+    </header>
+    <nav>
+        <h2>Lições</h2>
+        <ul>
+            <li><a href="#" id="lesson1Link">JavaScript Básico - Lição 1</a></li>
+            <!-- Adicionar mais links de lições aqui -->
+        </ul>
+    </nav>
+    <main id="lessonContent">
+        <p>Selecione uma lição para começar.</p>
+    </main>
+    <div id="jsLesson1Content" style="display:none;">
+        <h2>JavaScript Básico - Lição 1: Variáveis e Console</h2>
+        <p>Bem-vindo à sua primeira lição de JavaScript!</p>
+
+        <h3>O que é JavaScript?</h3>
+        <p>JavaScript é uma linguagem de programação que permite adicionar interatividade às páginas web. Com ela, você pode criar elementos dinâmicos, validar formulários, animar objetos e muito mais.</p>
+
+        <h3>Variáveis</h3>
+        <p>Variáveis são como "caixas" onde você pode guardar informações. Em JavaScript, você pode declarar uma variável usando <code>let</code>, <code>const</code>, ou <code>var</code> (<code>let</code> e <code>const</code> são mais modernos e recomendados).</p>
+        <p><strong>Exemplo:</strong></p>
+        <pre><code>
+let saudacao = "Olá, mundo!";
+const pi = 3.14159;
+
+// Você pode ver o valor de uma variável usando console.log()
+console.log(saudacao); // Isso mostrará "Olá, mundo!" no console do navegador
+console.log(pi);       // Isso mostrará 3.14159
+        </code></pre>
+        <p><code>let</code> permite que você mude o valor da variável depois, enquanto <code>const</code> cria uma constante, ou seja, um valor que não pode ser alterado após a atribuição.</p>
+
+        <h3><code>console.log()</code></h3>
+        <p>A função <code>console.log()</code> é uma ferramenta muito útil para desenvolvedores. Ela permite que você exiba mensagens ou valores de variáveis no console do navegador.</p>
+        <p>Para ver o console no seu navegador, geralmente você pode clicar com o botão direito na página, selecionar "Inspecionar" ou "Inspecionar Elemento", e então procurar pela aba "Console".</p>
+        <p><strong>Exemplo:</strong></p>
+        <pre><code>
+console.log("Estou aprendendo JavaScript!");
+let numero = 10;
+console.log("O valor da variável numero é:", numero);
+        </code></pre>
+
+        <h3>Experimente!</h3>
+        <p>Abra o console do seu navegador e tente declarar algumas variáveis e usar <code>console.log()</code> para ver os resultados.</p>
+    </div>
+    <footer>
+        <p>&copy; 2023 Seu App de Ensino</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const lesson1Link = document.getElementById('lesson1Link');
+            const lessonContentArea = document.getElementById('lessonContent');
+            const jsLesson1HtmlContent = document.getElementById('jsLesson1Content').innerHTML;
+
+            lesson1Link.addEventListener('click', function(event) {
+                event.preventDefault(); // Previne o comportamento padrão do link (navegar para #)
+                lessonContentArea.innerHTML = jsLesson1HtmlContent;
+            });
+        });
+    </script>
+</body>
+</html>
