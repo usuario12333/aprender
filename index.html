@@ -75,6 +75,32 @@
             /* bottom: 0; removed */
             /* width: 100%; removed */
         }
+
+        /* styles for on-page console */
+        .console-output-area {
+            background-color: #222; /* Dark background */
+            color: #eee; /* Light text */
+            font-family: 'Courier New', Courier, monospace; /* Monospaced font */
+            padding: 10px;
+            margin: 1rem; /* Match margin of lessonContent */
+            border-radius: 5px;
+            height: 150px; /* Fixed height */
+            overflow-y: auto; /* Scrollable if content overflows */
+            border: 1px solid #444;
+        }
+
+        .console-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #555;
+            padding-bottom: 5px;
+        }
+
+        #consoleMessages p {
+            margin: 0 0 5px 0; /* Spacing between messages */
+            white-space: pre-wrap; /* Preserve whitespace and wrap lines */
+            word-break: break-all; /* Break long words to prevent overflow */
+        }
     </style>
 </head>
 <body>
@@ -90,7 +116,18 @@
     </nav>
     <main id="lessonContent">
         <p>Selecione uma lição para começar.</p>
-    </main>
+    </main> <!-- This is the closing tag of main#lessonContent -->
+
+    <div id="onPageConsoleOutput" class="console-output-area">
+        <div class="console-header">
+            <span>Console:</span>
+            <button id="clearConsoleButton" style="float: right; font-size: 0.8em; padding: 2px 5px;">Clear</button>
+        </div>
+        <div id="consoleMessages" style="clear: both;">
+            <!-- Messages will appear here -->
+        </div>
+    </div>
+
     <div id="jsLesson1Content" style="display:none;">
         <h2>JavaScript Básico - Lição 1: Variáveis e Console</h2>
         <p>Bem-vindo à sua primeira lição de JavaScript!</p>
@@ -111,32 +148,86 @@ console.log(pi);       // Isso mostrará 3.14159
         </code></pre>
         <p><code>let</code> permite que você mude o valor da variável depois, enquanto <code>const</code> cria uma constante, ou seja, um valor que não pode ser alterado após a atribuição.</p>
 
-        <h3><code>console.log()</code></h3>
-        <p>A função <code>console.log()</code> é uma ferramenta muito útil para desenvolvedores. Ela permite que você exiba mensagens ou valores de variáveis no console do navegador.</p>
-        <p>Para ver o console no seu navegador, geralmente você pode clicar com o botão direito na página, selecionar "Inspecionar" ou "Inspecionar Elemento", e então procurar pela aba "Console".</p>
+        <h3><code>console.log()</code> e o Console na Página</h3>
+        <p>A função <code>console.log()</code> é uma ferramenta muito útil para desenvolvedores. Ela permite que você exiba mensagens ou valores de variáveis.</p>
+        <p>Neste aplicativo, as saídas de <code>console.log()</code> aparecerão diretamente em uma área de "Console" localizada abaixo desta lição. Isso facilita a visualização dos resultados, especialmente em dispositivos móveis.</p>
+        <p>Você ainda pode abrir o console do seu navegador (geralmente clicando com o botão direito na página, selecionando "Inspecionar" ou "Inspecionar Elemento", e então procurando pela aba "Console") para ver informações adicionais ou erros mais detalhados.</p>
         <p><strong>Exemplo:</strong></p>
         <pre><code>
 console.log("Estou aprendendo JavaScript!");
 let numero = 10;
 console.log("O valor da variável numero é:", numero);
+// Observe a saída no console abaixo da lição!
         </code></pre>
 
         <h3>Experimente!</h3>
-        <p>Abra o console do seu navegador e tente declarar algumas variáveis e usar <code>console.log()</code> para ver os resultados.</p>
+        <p>Tente declarar algumas variáveis e usar <code>console.log()</code> no código de exemplo (ou mentalmente, por enquanto). Veja os resultados aparecerem no console aqui na página, logo abaixo. Você também pode usar o botão "Clear" no console da página para limpar as mensagens antigas.</p>
     </div>
     <footer>
         <p>&copy; 2023 Seu App de Ensino</p>
     </footer>
     <script>
+        // --- On-page console implementation ---
+        const consoleMessagesContainer = document.getElementById('consoleMessages');
+        const originalConsoleLog = console.log;
+
+        console.log = function(...args) {
+            // Call the original console.log so messages also appear in the browser's dev console
+            originalConsoleLog.apply(console, args);
+
+            // Create a new message element for the on-page console
+            const messageElement = document.createElement('p');
+
+            // Convert all arguments to strings and join them
+            const messageText = args.map(arg => {
+                if (typeof arg === 'object' && arg !== null) {
+                    try {
+                        return JSON.stringify(arg, null, 2); // Pretty print objects
+                    } catch (e) {
+                        return '[Object]'; // Fallback for complex/circular objects
+                    }
+                }
+                return String(arg);
+            }).join(' '); // Join multiple arguments with a space
+
+            messageElement.textContent = messageText;
+
+            if (consoleMessagesContainer) {
+                consoleMessagesContainer.appendChild(messageElement);
+                // Scroll to the bottom of the console
+                consoleMessagesContainer.scrollTop = consoleMessagesContainer.scrollHeight;
+            } else {
+                // Fallback if the on-page console isn't found yet (e.g., if script runs too early)
+                originalConsoleLog('On-page console element not found. Message: ', messageText);
+            }
+        };
+
+        // --- End of On-page console implementation ---
+
+        // Existing script content (DOMContentLoaded listener etc.) follows:
         document.addEventListener('DOMContentLoaded', function() {
+            // Make sure consoleMessagesContainer is defined here if not globally,
+            // or if the above code is moved inside DOMContentLoaded.
+            // For simplicity, keeping it global for now as getElementById might run before DOM is fully ready
+            // if this entire script block is in <head>. But since it's at end of <body>, it should be fine.
+
             const lesson1Link = document.getElementById('lesson1Link');
             const lessonContentArea = document.getElementById('lessonContent');
             const jsLesson1HtmlContent = document.getElementById('jsLesson1Content').innerHTML;
+            const clearConsoleBtn = document.getElementById('clearConsoleButton'); // Get the button
+            const consoleMessagesDiv = document.getElementById('consoleMessages'); // Get the messages div
 
             lesson1Link.addEventListener('click', function(event) {
                 event.preventDefault(); // Previne o comportamento padrão do link (navegar para #)
                 lessonContentArea.innerHTML = jsLesson1HtmlContent;
             });
+
+            // Add event listener for the clear console button
+            if (clearConsoleBtn && consoleMessagesDiv) {
+                clearConsoleBtn.addEventListener('click', function() {
+                    consoleMessagesDiv.innerHTML = ''; // Clear the console messages
+                });
+            }
         });
     </script>
 </body>
