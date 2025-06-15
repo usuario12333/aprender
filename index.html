@@ -123,8 +123,13 @@
             <span>Console:</span>
             <button id="clearConsoleButton" style="float: right; font-size: 0.8em; padding: 2px 5px;">Clear</button>
         </div>
-        <div id="consoleMessages" style="clear: both;">
+        <div id="consoleMessages" style="clear: both; height: 100px; overflow-y: auto; border-bottom: 1px solid #555; margin-bottom: 5px;">
             <!-- Messages will appear here -->
+            <!-- Adjusted height and added border/margin to separate from input area -->
+        </div>
+        <div id="consoleInputArea" style="display: flex;">
+            <input type="text" id="consoleInput" style="flex-grow: 1; background-color: #333; color: #eee; border: 1px solid #555; padding: 3px;" placeholder="Digite o código aqui...">
+            <button id="runConsoleInputButton" style="margin-left: 5px; padding: 3px 7px;">Executar</button>
         </div>
     </div>
 
@@ -161,7 +166,8 @@ console.log("O valor da variável numero é:", numero);
         </code></pre>
 
         <h3>Experimente!</h3>
-        <p>Tente declarar algumas variáveis e usar <code>console.log()</code> no código de exemplo (ou mentalmente, por enquanto). Veja os resultados aparecerem no console aqui na página, logo abaixo. Você também pode usar o botão "Clear" no console da página para limpar as mensagens antigas.</p>
+        <p>Tente declarar algumas variáveis e usar <code>console.log()</code>. Veja os resultados aparecerem no console aqui na página, logo abaixo. </p>
+        <p><strong>Agora você também pode digitar comandos JavaScript diretamente no campo de entrada do console abaixo e clicar em "Executar" (ou pressionar Enter) para ver o resultado!</strong> Por exemplo, tente digitar <code>let minhaVariavel = "Olá do console!";</code> e depois <code>console.log(minhaVariavel);</code>. Use o botão "Clear" no console da página para limpar as mensagens antigas.</p>
     </div>
     <footer>
         <p>&copy; 2023 Seu App de Ensino</p>
@@ -215,7 +221,50 @@ console.log("O valor da variável numero é:", numero);
             const lessonContentArea = document.getElementById('lessonContent');
             const jsLesson1HtmlContent = document.getElementById('jsLesson1Content').innerHTML;
             const clearConsoleBtn = document.getElementById('clearConsoleButton'); // Get the button
-            const consoleMessagesDiv = document.getElementById('consoleMessages'); // Get the messages div
+            const consoleMessagesDiv = document.getElementById('consoleMessages'); // Get the messages div (used by clear button)
+            // consoleMessagesContainer is the global one used by the console.log override. Both point to the same element.
+
+            const consoleInput = document.getElementById('consoleInput');
+            const runConsoleInputButton = document.getElementById('runConsoleInputButton');
+
+            function executeConsoleInput() {
+                const command = consoleInput.value.trim();
+                if (command === '') {
+                    return;
+                }
+
+                // Echo the command to the on-page console
+                const commandEchoElement = document.createElement('p');
+                commandEchoElement.style.color = '#88aaff'; // Style for echoed command
+                commandEchoElement.textContent = `> ${command}`;
+                if (consoleMessagesContainer) { // Use the same container as the overridden console.log
+                    consoleMessagesContainer.appendChild(commandEchoElement);
+                }
+
+                try {
+                    const result = eval(command);
+                    if (result !== undefined) {
+                        console.log(result); // This will use our overridden console.log
+                    }
+                } catch (error) {
+                    console.log(`Error: ${error.message}`);
+                }
+
+                consoleInput.value = ''; // Clear the input field
+
+                if (consoleMessagesContainer) {
+                    consoleMessagesContainer.scrollTop = consoleMessagesContainer.scrollHeight;
+                }
+            }
+
+            if (runConsoleInputButton && consoleInput) {
+                runConsoleInputButton.addEventListener('click', executeConsoleInput);
+                consoleInput.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter' || event.keyCode === 13) {
+                        executeConsoleInput();
+                    }
+                });
+            }
 
             lesson1Link.addEventListener('click', function(event) {
                 event.preventDefault(); // Previne o comportamento padrão do link (navegar para #)
